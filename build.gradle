@@ -1,0 +1,40 @@
+plugins {
+    id 'java'
+    id 'io.qameta.allure' version '2.11.2'
+    id 'io.qameta.allure-adapter' version '2.11.2'
+}
+
+group 'org.example'
+version '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+
+allure {
+    version.set("2.22.0")
+    adapter {
+        aspectjVersion.set("1.9.19")
+        autoconfigure.set(true)
+        aspectjWeaver.set(true)
+    }
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.3'
+    testImplementation 'io.qameta.allure:allure-java-commons:2.22.0'
+}
+
+test {
+    // The command to run test by a specific tag ./gradlew clean test -DincludeTags='regression'
+    String includedTags = System.getProperty("includeTags")  ? System.getProperty("includeTags") : null;
+
+    if (includedTags == null) {
+        useJUnitPlatform()
+    } else {
+        useJUnitPlatform {
+            includeTags includedTags
+        }
+    }
+}
