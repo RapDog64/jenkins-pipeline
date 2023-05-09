@@ -1,9 +1,10 @@
 pipeline {
     agent any
 
-    parameters {
-         string defaultValue: 'smoke', description: '''User examples: Run by one tag: 1. \'smoke\' Run by multiple tags: 2. \'smoke | sanity\'''', name: 'TAG'
-    }
+ parameters {
+   string defaultValue: 'smoke', description: '''Available tags: 1. smoke 2. sanity 3. regression''', name: 'TAG'
+ }
+
 
     tools {
         gradle 'Gradle 6.9.4'
@@ -18,20 +19,20 @@ pipeline {
         }
         stage('Run tests') {
             steps {
-                sh "gradle clean test -DincludeTags=${params.TAG}"
+                sh "gradle test -DincludeTags='${params.TAG}'"
             }
         }
-        stage('Reports') {
-            steps {
-                sh "ls -l"
-                allure([
-                   includeProperties: false,
-                   jdk: '',
-                   properties: [],
-                   reportBuildPolicy: 'ALWAYS',
-                   results: [[path: 'build/allure-results']]
-                   ])
-            }
-        }        
+    }
+    post {
+        always {
+             sh "ls -l"
+             allure([
+             includeProperties: false,
+             jdk: '',
+             properties: [],
+             reportBuildPolicy: 'ALWAYS',
+             results: [[path: 'build/allure-results']]
+             ])
+        }
     }
 }
