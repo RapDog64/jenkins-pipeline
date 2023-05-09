@@ -21,10 +21,17 @@ pipeline {
                 sh "gradle clean test -DincludeTags=${params.TAG}"
             }
         }
-        stage('Generate Allure Report') {
+        stage('Reports') {
             steps {
-                allure includeProperties: false, jdk: '', properties: [], reportBuildPolicy: 'ALWAYS', results: [[path: '-o build/allure-results']]
+                sh "ls -l"
+                allure([
+                   includeProperties: false,
+                   jdk: '',
+                   properties: [],
+                   reportBuildPolicy: 'ALWAYS',
+                   results: [[path: 'build/allure-results']]
+                   ])
             }
-        }
+        }        
     }
 }
