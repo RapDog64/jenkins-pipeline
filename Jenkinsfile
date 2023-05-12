@@ -3,8 +3,8 @@ pipeline {
 
  parameters {
    string defaultValue: 'smoke', description: '''Available tags: 1. smoke 2. sanity 3. regression''', name: 'TAG'
+   string defaultValue: 'main', name: 'BRANCH'
  }
-
 
     tools {
         gradle 'Gradle 6.9.4'
@@ -14,7 +14,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/RapDog64/jenkins-pipeline.git'
+                git branch: '${BRANCH}', url: 'https://github.com/RapDog64/jenkins-pipeline.git'
             }
         }
         stage('Run tests') {
